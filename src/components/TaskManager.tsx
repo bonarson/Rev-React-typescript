@@ -1,50 +1,18 @@
-import { nanoid } from "nanoid";
-import React, { useState } from "react";
+import React from "react";
 import "./TaskManager.css";
-
-interface Task {
-  id: string;
-  title: string;
-}
+import useTaskManager from "./useTaskManager";
 
 export const TaskManager: React.FC = () => {
-  const [title, setTitle] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [tasks, setTasks] = useState<Task[]>([]);
- 
-  // remove task from list
-  const completeTask = (id: string) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
-  const updateTask = (id: string, taskUpdate: Partial<Task>) => {
-    const newTasks = [...tasks];
-    const index = tasks.findIndex((task) => task.id === id);
-    newTasks[index] = { ...newTasks[index], ...taskUpdate };
-    setTasks(newTasks);
-  };
-
-  const addTask = () => {
-    if (title.length < 1) {
-      return;
-    }
-
-    const newTask: Task = {
-      // using nanoid to generate unique id
-      id: nanoid(),
-      title,
-    };
-    setTasks((prev) => [...prev, newTask]);
-    setTitle("");
-  };
-
-  const handleSearch = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(ev.target.value);
-  };
-
-  const filteredTasks = tasks.filter((task) =>
-    task.title.toLowerCase().includes(searchKeyword.toLowerCase())
-  );
+  const {
+    title,
+    setTitle,
+    searchKeyword,
+    completeTask,
+    updateTask,
+    addTask,
+    handleSearch,
+    filteredTasks,
+  } = useTaskManager();
 
   return (
     <div className="container">
@@ -53,6 +21,7 @@ export const TaskManager: React.FC = () => {
       <div>
         <input
           type="text"
+          value={searchKeyword}
           onChange={handleSearch}
           placeholder="Search Task"
         />
@@ -62,32 +31,30 @@ export const TaskManager: React.FC = () => {
         <input
           type="text"
           value={title}
-          onChange={(ev) => {
-            setTitle(ev.target.value);
-          }}
+          onChange={(ev) => setTitle(ev.target.value)}
+          placeholder="Add new task"
         />
-
         <button onClick={addTask}>Add Task</button>
       </div>
 
       <ul className="container">
         {filteredTasks.map((task) => (
           <li key={task.id} className="task">
-            <div className="task">
-              <input
-                type="text"
-                placeholder="Add new task"
-                value={task.title}
-                onChange={(e) => updateTask(task.id, { title: e.target.value })}
-              />
-              <button onClick={() => completeTask(task.id)}>Done</button>
-            </div>
+            <input
+              type="text"
+              value={task.title}
+              onChange={(e) => updateTask(task.id, { title: e.target.value })}
+            />
+            <button onClick={() => completeTask(task.id)}>Done</button>
           </li>
         ))}
       </ul>
     </div>
   );
 };
+
+
+
 
 /*import { nanoid } from "nanoid";
 import { useState } from "react";
