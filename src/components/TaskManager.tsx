@@ -7,10 +7,10 @@ export const TaskManager: React.FC = () => {
     title,
     setTitle,
     searchKeyword,
+    setSearchKeyword,
     completeTask,
     updateTask,
     addTask,
-    handleSearch,
     filteredTasks,
   } = useTaskManager();
 
@@ -22,7 +22,7 @@ export const TaskManager: React.FC = () => {
         <input
           type="text"
           value={searchKeyword}
-          onChange={handleSearch}
+          onChange={(e) => setSearchKeyword(e.target.value)}
           placeholder="Search Task"
         />
       </div>
@@ -31,7 +31,7 @@ export const TaskManager: React.FC = () => {
         <input
           type="text"
           value={title}
-          onChange={(ev) => setTitle(ev.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder="Add new task"
         />
         <button onClick={addTask}>Add Task</button>
@@ -52,6 +52,7 @@ export const TaskManager: React.FC = () => {
     </div>
   );
 };
+
 
 
 
